@@ -1,0 +1,70 @@
+<!doctype html>
+<html>
+<head>
+  <title>Roster</title>
+</head>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js" ></script>
+<script type="text/javascript">
+name=;
+imgFolder=;
+function init(){
+        rosterParts = imgFolder.split("_S__S_");
+     
+        $('#rName').html(unescape(rosterParts[0]));
+        $('#rFilename').html(unescape(rosterParts[1])+".pdf");
+        imageList(name,imgFolder);
+}
+
+function loadImage(name,imgFolder,imgName,tableId)
+{
+        var imgNameBang = saltBang(imgName);
+        var img = new Image();
+        img.width = "50";
+        img.src='https://cs.stanford.edu/~cgregg/cgi-bin/run_python.cgi?'+
+                'script_to_run='+'../rosters/cgi-bin/retrieveImageByFolder.cgi'+
+                '&name='+name+
+                '&imgFolder='+imgFolder+
+                '&imgName='+imgNameBang;
+        var table = document.getElementById(tableId);
+        var row = table.insertRow(-1); // insert at end
+        var cell1 = row.insertCell(0);
+        cell1.appendChild(img);
+        var cell2 = row.insertCell(1);
+        imgName = imgName.replace('.jpg','').replace('_',', ');
+        cell2.innerHTML = imgName;
+}
+
+function saltBang(theName)
+{
+       var newName = '';
+       for (var i=0;i<theName.length;i++){
+              newName += '!'+theName[i];
+       }
+       return newName;
+}
+
+function imageList(name,imgFolder)
+{
+        $.post('https://cs.stanford.edu/~cgregg/cgi-bin/run_python.cgi?script_to_run=../rosters/cgi-bin/getImageList.cgi',
+                        {'name':name,'imgFolder':imgFolder},function(data){
+                console.log(data);
+                init.names = data.split('\n');
+                init.names.pop() // remove trailing newline
+                for (var i=0;i<init.names.length;i++){
+                        // salt name with exclamation points so the CS server
+                        // does not deny the request
+                        loadImage(name,imgFolder,init.names[i],'imageTable');
+                }
+        });
+}
+
+</script>
+<body onload="init()">
+If the conversion was successful, you should see your students below:<p>
+Roster name: <span id='rName'></span><p>
+Roster filename: <span id='rFilename'></span><p>
+<table id="imageTable" border="1">
+</table>
+</body>
+</html>
+

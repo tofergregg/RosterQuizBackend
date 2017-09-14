@@ -1,0 +1,7 @@
+cgi-bin/rosters
+cgi-bin/oldRosters
+*~
+*.pyc
+rosterApp
+*.pdf
+
