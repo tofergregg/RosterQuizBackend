@@ -63,19 +63,30 @@ except OSError:
         pass # no worries if it already exists
 
 uploadFile = form['fileToUpload']
+originalPDFFilename = space_escape(uploadFile.filename)
+pdf_filename = rosterFolder+name+'/'+rosterName+sentinel+originalPDFFilename
+
 textRoster = form['textFileToUpload']
-originalFilename = space_escape(uploadFile.filename)
-filename = rosterFolder+name+'/'+rosterName+sentinel+originalFilename
-with open(filename,"wb") as f:
+originalTextFilename = space_escape(textRoster.filename)
+text_filename = rosterFolder+name+'/'+rosterName+sentinel+originalTextFilename
+
+with open(pdf_filename,"wb") as f:
      pdfFile = uploadFile.file
      while 1:
         chunk = pdfFile.read(4096)
         if not chunk: break
         f.write (chunk)
 
+with open(text_filename,"wb") as f:
+     textFile = textRoster.file 
+     while 1:
+        chunk = textFile.read(4096)
+        if not chunk: break
+        f.write (chunk)
+
 # attempt to extract the images
-imageDir=filename[:-4] # strip .pdf for imageDir
-p = Popen(['./extractImages.sh', filename, imageDir], stdin=PIPE, stdout=PIPE, stderr=PIPE)
+imageDir=pdf_filename[:-4] # strip .pdf for imageDir
+p = Popen(['./extractImages.sh', pdf_filename, text_filename, imageDir], stdin=PIPE, stdout=PIPE, stderr=PIPE)
 output, err = p.communicate(b"input data that is passed to subprocess' stdin")
 rc = p.returncode
 
@@ -90,10 +101,10 @@ with open('showRoster.html','r') as f:
         outputPage = f.read()
 
 outputPage = outputPage.replace('name=;','name="'+name+'";');
-folderName = rosterName+sentinel+originalFilename[:-4]
+folderName = rosterName+sentinel+originalPDFFilename[:-4]
 outputPage = outputPage.replace('imgFolder=;','imgFolder="'+folderName+'";');
 print outputPage
 #print("Your name: %s<p>" % space_unescape(name))
 #print("Roster name: %s<p>" % space_unescape(rosterName))
-#print("Filename: %s<p>" % space_unescape(originalFilename))
+#print("Filename: %s<p>" % space_unescape(originalPDFFilename))
 

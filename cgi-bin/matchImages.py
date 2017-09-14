@@ -11,20 +11,31 @@ def printImageToConsole(image):
         # image is a path to an image
         os.system(BASEDIR + "imgcat " + image)
 
-if len(sys.argv) != 3:
+if len(sys.argv) != 4:
         print("Usage:")
-        print("\tparseNames.py names.txt img_folder")
+        print("\tmatchImages.py roster.pdf names.txt img_folder")
         quit()
+pdf_file = sys.argv[1]
+roster_names = sys.argv[2]
+img_folder = sys.argv[3]+"/" # in case the user forgot
 
-with open(sys.argv[1],"r") as f:
+
+# extract the images from the PDF
+# check if img_folder exists, if not, create it
+if not os.path.exists(img_folder):
+        os.makedirs(img_folder)
+
+# extract the images
+os.system("pdfimages -j "+pdf_file+" "+img_folder+"image")
+
+with open(roster_names,"r") as f:
         names = f.readlines()
 
 # remove newlines from names
 names = [x[:-1] for x in names]
 
-img_folder = sys.argv[2]
+img_folder = img_folder 
 
-# names will have the form image-000.jpg and the number will increment by 1
 # If all goes well, we will have the same number of files as names
 jpgs = os.listdir(img_folder)
 jpgs = [x for x in jpgs if ".jpg" in x]
