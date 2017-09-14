@@ -60,8 +60,6 @@ img_folder = img_folder
 
 # we need to see if there are any missing jpgs (for Stanford PDFs)
 
-print pdf_file
-print roster_names
 proc = subprocess.Popen(["./noPhotosList.py",pdf_file,roster_names], stdout=subprocess.PIPE)
 (noPhotosNames, err) = proc.communicate()
 noPhotosNames = noPhotosNames.split('\n')[:-1]
@@ -83,16 +81,15 @@ for idx,name in enumerate(names):
         nameForImage = simplifyName(name)
         if name in noPhotosNames:
                 image = "User-400.jpg" # blank image
-                printImageToConsole(image)
                 # copy image file
                 copyfile(image,img_folder+nameForImage)
                 noImageCount += 1
         else:
                 image = jpgs[idx - noImageCount] 
-                printImageToConsole(img_folder+image)
                 # rename
                 os.rename(img_folder+image,img_folder+nameForImage)
-        print('"'+name+'"')
+        #printImageToConsole(img_folder+image)
+        #print('"'+name+'"')
 
 
 

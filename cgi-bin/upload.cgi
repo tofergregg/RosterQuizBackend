@@ -84,9 +84,10 @@ with open(text_filename,"wb") as f:
         if not chunk: break
         f.write (chunk)
 
-# attempt to extract the images
+# match the images to the text file
 imageDir=pdf_filename[:-4] # strip .pdf for imageDir
-p = Popen(['./extractImages.sh', pdf_filename, text_filename, imageDir], stdin=PIPE, stdout=PIPE, stderr=PIPE)
+p = Popen(['./matchImages.py', pdf_filename, text_filename, imageDir], stdin=PIPE, stdout=PIPE, stderr=PIPE)
+#p = Popen(['./extractImages.sh', pdf_filename, text_filename, imageDir], stdin=PIPE, stdout=PIPE, stderr=PIPE)
 output, err = p.communicate(b"input data that is passed to subprocess' stdin")
 rc = p.returncode
 
