@@ -19,7 +19,8 @@ def simplifyName(name):
         # finding the first space after the underscore
         indexOfSpace = nameForImage.find(' ',nameForImage.find('_'))
         if indexOfSpace != -1: # -1 means that there isn't a middle name
-                nameForImage = nameForImage[:indexOfSpace]+'.jpg'
+                nameForImage = nameForImage[:indexOfSpace]
+        nameForImage = nameForImage+'.jpg'
         return nameForImage
 
 
