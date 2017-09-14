@@ -4,4 +4,4 @@ cgi-bin/oldRosters
 *.pyc
 rosterApp
 *.pdf
-
+cgi-bin/etc
