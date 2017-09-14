@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# this should be in the www/cgi-bin directory
+
 export PATH=/afs/cs.stanford.edu/u/cgregg/python_local/bin:$PATH
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/afs/cs.stanford.edu/u/cgregg/python_local/lib:/afs/cs.stanford.edu/u/cgregg/.local/lib:/afs/cs.stanford.edu/u/cgregg/.local/lib/libffi_lib64
 
